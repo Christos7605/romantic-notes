@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Love Notes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400&display=swap');
+
+        body { 
+            font-family: 'Playfair Display', serif;
+            text-align: center; 
+            background: #fdf0f4 url('https://www.transparenttextures.com/patterns/vintage-flowers.png'); 
+            background-size: cover;
+            margin: 0; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+            color: #b23a48;
+        }
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            border-radius: 15px;
+            background: rgba(255, 240, 245, 0.85);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 2s ease;
+        }
+        .message {
+            font-size: 28px; 
+            font-family: 'Great Vibes', cursive;
+            color: #8b2635;
+            margin-bottom: 25px;
+            text-shadow: 0px 0px 8px rgba(255, 192, 203, 0.7);
+        }
+        .refresh, .add-message {
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #b23a48;
+            border: none;
+            border-radius: 8px;
+            margin: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .refresh:hover, .add-message:hover {
+            background-color: #922d3a;
+            transform: scale(1.05);
+        }
+        #messageInputContainer {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+        }
+        #messageInput {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #b23a48;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .latest-message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #8b2635;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        #accessDenied {
+            text-align: center;
+            display: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main content container -->
+    <div id="protectedContent" style="display: none;">
+        <div class="container">
+            <div class="message" id="message">Hello Pepe.</div>
+            <button class="refresh" onclick="displayRandomMessage()">Reveal My Love Note</button>
+            <button class="add-message" onclick="toggleInput()">Add Your Own Love Note</button>
+
+            <div id="messageInputContainer">
+                <input type="text" id="messageInput" placeholder="Write your romantic message here...">
+                <button class="refresh" onclick="addMessage()">Submit Message</button>
+            </div>
+            <div class="latest-message" id="latestMessage">No custom messages added yet.</div>
+        </div>
+    </div>
+
+    <!-- Access denied message for unauthorized visitors -->
+    <div id="accessDenied" style="display: none;">
+        <h2>Access Restricted</h2>
+        <p>This page is only accessible to me and pepe.</p>
+    </div>
+
+    <script>
+        // Password protection
+        const allowedPassword = "pepe"; // Set your password here
+
+        function checkPassword() {
+            const enteredPassword = prompt("Please enter the password:");
+            if (enteredPassword === allowedPassword) {
+                document.getElementById('protectedContent').style.display = 'block';
+            } else {
+                document.getElementById('accessDenied').style.display = 'block';
+            }
+        }
+
+        // List of initial romantic messages
+        let messages = [
+            "You are my heart, my life, my one and only thought.",
+            "I never knew love could be so endless until I found you.",
+            "In your arms, I have found my forever.",
+            "Every beat of my heart belongs to you.",
+            "When I look at you, I see all of my tomorrows and all of my dreams come true.",
+            "Loving you is like breathing; I just can't stop.",
+            "My love for you is a journey, starting at forever and ending at never.",
+            "If my heart had wings, it would fly to you every moment of every day.",
+            "You are my first thought in the morning and my last whisper at night.",
+            "Forever with you simply will not be long enough."
+        ];
+
+        // Display a random message from the list
+        function displayRandomMessage() {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            document.getElementById('message').innerText = messages[randomIndex];
+        }
+
+        // Show the input field for adding a custom message
+        function toggleInput() {
+            const inputContainer = document.getElementById('messageInputContainer');
+            inputContainer.style.display = inputContainer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Add a new message from user input and update the latest message
+        function addMessage() {
+            const userMessage = document.getElementById('messageInput').value.trim();
+            if (userMessage) {
+                messages.push(userMessage);
+                document.getElementById('messageInput').value = ''; // Clear input
+                document.getElementById('latestMessage').innerText = `Most recent message added: "${userMessage}"`;
+                alert("Your message has been added!");
+            } else {
+                alert("Please enter a message.");
+            }
+        }
+
+        // Call password check on page load
+        window.onload = checkPassword;
+    </script>
+</body>
+</html>
