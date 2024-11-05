@@ -82,7 +82,7 @@
 <body>
     <div id="protectedContent" style="display: none;">
         <div class="container">
-            <div class="message" id="message">Welcome to Endless Love Notes... Tap below for a touch of romance.</div>
+            <div class="message" id="message">Hello pepe.</div>
             <button class="refresh" onclick="displayRandomMessage()">Reveal My Love Note</button>
             <button class="add-message" onclick="toggleInput()">Add Your Own Love Note</button>
 
@@ -104,10 +104,10 @@
 
     <script>
         // Password protection
-        const allowedPassword = "yourpassword"; // Set your password here
+        const allowedPassword = "pepe"; // Set your password here
 
         function checkPassword() {
-            const enteredPassword = prompt("Please enter the password:");
+            const enteredPassword = prompt("If you are not Fay go. Otherwise, please enter the password:");
             if (enteredPassword === allowedPassword) {
                 document.getElementById('protectedContent').style.display = 'block';
                 loadMessages(); // Load messages from localStorage when password is correct
