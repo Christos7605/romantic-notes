@@ -35,7 +35,7 @@
             margin-bottom: 25px;
             text-shadow: 0px 0px 8px rgba(255, 192, 203, 0.7);
         }
-        .refresh, .add-message {
+        .refresh, .add-message, .delete-message {
             padding: 12px 30px;
             font-size: 16px;
             cursor: pointer;
@@ -46,7 +46,7 @@
             margin: 10px;
             transition: background-color 0.3s, transform 0.2s;
         }
-        .refresh:hover, .add-message:hover {
+        .refresh:hover, .add-message:hover, .delete-message:hover {
             background-color: #922d3a;
             transform: scale(1.05);
         }
@@ -80,10 +80,9 @@
     </style>
 </head>
 <body>
-    <!-- Main content container -->
     <div id="protectedContent" style="display: none;">
         <div class="container">
-            <div class="message" id="message">Hello Pepe.</div>
+            <div class="message" id="message">Welcome to Endless Love Notes... Tap below for a touch of romance.</div>
             <button class="refresh" onclick="displayRandomMessage()">Reveal My Love Note</button>
             <button class="add-message" onclick="toggleInput()">Add Your Own Love Note</button>
 
@@ -91,24 +90,27 @@
                 <input type="text" id="messageInput" placeholder="Write your romantic message here...">
                 <button class="refresh" onclick="addMessage()">Submit Message</button>
             </div>
+
+            <button class="delete-message" onclick="deleteLatestMessage()">Delete Latest Message</button>
+
             <div class="latest-message" id="latestMessage">No custom messages added yet.</div>
         </div>
     </div>
 
-    <!-- Access denied message for unauthorized visitors -->
     <div id="accessDenied" style="display: none;">
         <h2>Access Restricted</h2>
-        <p>This page is only accessible to me and pepe.</p>
+        <p>This page is only accessible to authorized users.</p>
     </div>
 
     <script>
         // Password protection
-        const allowedPassword = "pepe"; // Set your password here
+        const allowedPassword = "yourpassword"; // Set your password here
 
         function checkPassword() {
             const enteredPassword = prompt("Please enter the password:");
             if (enteredPassword === allowedPassword) {
                 document.getElementById('protectedContent').style.display = 'block';
+                loadMessages(); // Load messages from localStorage when password is correct
             } else {
                 document.getElementById('accessDenied').style.display = 'block';
             }
@@ -128,6 +130,16 @@
             "Forever with you simply will not be long enough."
         ];
 
+        // Load messages from localStorage on page load
+        function loadMessages() {
+            const storedMessages = JSON.parse(localStorage.getItem('messages'));
+            if (storedMessages) {
+                messages = storedMessages; // Update the messages array with stored messages
+            }
+            const latestMessage = localStorage.getItem('latestMessage');
+            document.getElementById('latestMessage').innerText = latestMessage ? `Most recent message added: "${latestMessage}"` : 'No custom messages added yet.';
+        }
+
         // Display a random message from the list
         function displayRandomMessage() {
             const randomIndex = Math.floor(Math.random() * messages.length);
@@ -145,6 +157,8 @@
             const userMessage = document.getElementById('messageInput').value.trim();
             if (userMessage) {
                 messages.push(userMessage);
+                localStorage.setItem('messages', JSON.stringify(messages)); // Save messages to localStorage
+                localStorage.setItem('latestMessage', userMessage); // Save the latest message
                 document.getElementById('messageInput').value = ''; // Clear input
                 document.getElementById('latestMessage').innerText = `Most recent message added: "${userMessage}"`;
                 alert("Your message has been added!");
@@ -153,7 +167,25 @@
             }
         }
 
-        // Call password check on page load
+        // Delete the latest message added
+        function deleteLatestMessage() {
+            const latestMessage = localStorage.getItem('latestMessage');
+            if (latestMessage) {
+                const index = messages.indexOf(latestMessage);
+                if (index > -1) {
+                    messages.splice(index, 1); // Remove the latest message from the array
+                    localStorage.setItem('messages', JSON.stringify(messages)); // Update localStorage
+                    alert("The latest message has been deleted.");
+                    const newLatestMessage = messages[messages.length - 1]; // Get the new latest message if available
+                    localStorage.setItem('latestMessage', newLatestMessage ? newLatestMessage : 'No custom messages added yet.'); // Update latest message
+                    document.getElementById('latestMessage').innerText = newLatestMessage ? `Most recent message added: "${newLatestMessage}"` : 'No custom messages added yet.';
+                }
+            } else {
+                alert("No messages to delete.");
+            }
+        }
+
+        // Initialize password check on page load
         window.onload = checkPassword;
     </script>
 </body>
