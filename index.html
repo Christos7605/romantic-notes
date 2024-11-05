@@ -132,10 +132,6 @@
 
         // Load messages from localStorage on page load
         function loadMessages() {
-            const storedMessages = JSON.parse(localStorage.getItem('messages'));
-            if (storedMessages) {
-                messages = storedMessages; // Update the messages array with stored messages
-            }
             const latestMessage = localStorage.getItem('latestMessage');
             document.getElementById('latestMessage').innerText = latestMessage ? `Most recent message added: "${latestMessage}"` : 'No custom messages added yet.';
         }
@@ -156,11 +152,9 @@
         function addMessage() {
             const userMessage = document.getElementById('messageInput').value.trim();
             if (userMessage) {
-                messages.push(userMessage);
-                localStorage.setItem('messages', JSON.stringify(messages)); // Save messages to localStorage
                 localStorage.setItem('latestMessage', userMessage); // Save the latest message
-                document.getElementById('messageInput').value = ''; // Clear input
                 document.getElementById('latestMessage').innerText = `Most recent message added: "${userMessage}"`;
+                document.getElementById('messageInput').value = ''; // Clear input
                 alert("Your message has been added!");
             } else {
                 alert("Please enter a message.");
@@ -171,15 +165,9 @@
         function deleteLatestMessage() {
             const latestMessage = localStorage.getItem('latestMessage');
             if (latestMessage) {
-                const index = messages.indexOf(latestMessage);
-                if (index > -1) {
-                    messages.splice(index, 1); // Remove the latest message from the array
-                    localStorage.setItem('messages', JSON.stringify(messages)); // Update localStorage
-                    alert("The latest message has been deleted.");
-                    const newLatestMessage = messages[messages.length - 1]; // Get the new latest message if available
-                    localStorage.setItem('latestMessage', newLatestMessage ? newLatestMessage : 'No custom messages added yet.'); // Update latest message
-                    document.getElementById('latestMessage').innerText = newLatestMessage ? `Most recent message added: "${newLatestMessage}"` : 'No custom messages added yet.';
-                }
+                localStorage.removeItem('latestMessage'); // Remove the latest message from localStorage
+                document.getElementById('latestMessage').innerText = 'No custom messages added yet.';
+                alert("The latest message has been deleted.");
             } else {
                 alert("No messages to delete.");
             }
